@@ -1,0 +1,105 @@
+
+
+def dec_bit(num):
+    """Converts decimal number to binary list"""
+    powerof2 = (128,64,32,16,8,4,2,1)
+    z = 0
+    newoct = []
+    k = 0
+    for r in powerof2:
+        if r <= num:
+            num = num - r
+            z = 1
+        else:
+            z = 0
+        newoct.append(z) 
+    return newoct
+
+
+keep = ""
+while keep == "":
+    print('Example: 255.255.128.0')
+    mask = input("\nEnter subnet mask: ")
+    one = ""
+    two = ""
+    three = ""
+    four = ""
+    cntr = 1
+    cntr2 = 0
+    cntr3 = 0
+    valid = ("0","128","255","254","252","248","240","224","192")
+    for i in mask:
+        if i == ".":
+            cntr3 += 1
+            #print(". test")
+    
+    if cntr3 == 3:
+        for i in mask:
+            if i == ".":
+                cntr += 1
+            else:
+                if int(i) % 1 == 0:
+                    if cntr == 1:
+                        one += str(i)
+                    if cntr == 2:
+                        two += str(i)
+                    if cntr == 3:
+                        three += str(i)
+                    if cntr == 4:
+                        four += str(i)
+
+        if one not in valid[0:7]:
+            print('First not valid ')
+            continue     
+        if two not in valid[0:7]:
+            print('Second not valid')
+            continue
+        if three not in valid[0:7]:
+            print('Third not valid')
+            continue
+        if four not in valid[0:7]:
+            print('Fourth not valid')
+            continue
+        
+            
+        if one != '255':
+            print('First octet must be 255')
+            continue
+        if one == '255' and two != '255':
+            #print('-2')
+            if three != '0' or four != '0':
+                print('invalid 2, Octets after not 255 must be 0')
+                continue
+        if one == '255' and two == '255' and three != '255':
+            #print('-3')
+            if four != '0':
+                print('invalid 3, Octets after not 255 must be 0')
+                continue
+        
+
+
+
+        
+        #print(one)
+        #print(two)
+        #print(three)
+        #print(four)
+
+        newone = dec_bit(int(one))
+        newtwo = dec_bit(int(two))
+        newthree = dec_bit(int(three))
+        newfour = dec_bit(int(four))
+
+        print()
+        alltogether = newone + newtwo + newthree + newfour
+        #print(alltogether)
+        #print(len(alltogether))
+        
+        for i in alltogether:
+            if str(i) == "1":
+                cntr2 += 1
+
+        print("Your shorthand subnet mask is : /",cntr2)
+    else:
+        print('Try format: \"255.255.128.0\"')
+        
